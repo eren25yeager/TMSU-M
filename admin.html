@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Future Admin | تحيا مصر</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- تصحيح المسار: css/dashboard.css -->
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-theme="dark">
+
+    <div class="login-universe" id="loginScreen">
+        <div class="grid-bg"></div>
+        <div class="login-panel">
+            <div class="login-content">
+                <div class="cyber-logo"><i class="fas fa-fingerprint"></i></div>
+                <h2 class="glitch-text">TMSU Dashboard</h2>
+                <p class="sub-text">يرجى تأكيد الهوية للدخول</p>
+                <form id="loginForm" onsubmit="return false;">
+                    <div class="cyber-input">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="passwordInput" placeholder="كود الدخول" autocomplete="off">
+                    </div>
+                    <button type="submit" class="cyber-button" onclick="attemptLogin()">
+                        <span>تسجيل الدخول</span><i class="fas fa-arrow-left"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-layout" id="appContainer" style="display: none;">
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <i class="fas fa-bolt brand-icon"></i>
+                    <div><h3>لوحة التحكم</h3><span class="version">Admin V 4.5</span></div>
+                </div>
+                <button class="close-sidebar-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <ul class="menu-list">
+                <li class="menu-item active" onclick="switchTab('home')">
+                    <i class="fas fa-th-large"></i> <span>الرئيسية</span>
+                </li>
+                <!-- زر الهيكل التنظيمي الجديد -->
+                <li class="menu-item" onclick="switchTab('team')">
+                    <i class="fas fa-sitemap"></i> <span>الهيكل التنظيمي</span> <span class="badge">جديد</span>
+                </li>
+                <li class="menu-item" onclick="switchTab('news')">
+                    <i class="fas fa-newspaper"></i> <span>الأخبار والفعاليات</span>
+                </li>
+                <li class="menu-item" onclick="switchTab('stars')">
+                    <i class="fas fa-crown"></i> <span>نجوم الشهر</span>
+                </li>
+                <li class="menu-item" onclick="switchTab('partners')">
+                    <i class="fas fa-handshake"></i> <span>شركاء النجاح</span>
+                </li>
+                <li class="menu-item" onclick="switchTab('logs')">
+                    <i class="fas fa-history"></i> <span>سجل النشاطات</span>
+                </li>
+                <li class="menu-item" onclick="switchTab('settings')">
+                    <i class="fas fa-cog"></i> <span>الإعدادات</span>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button id="themeToggleBtn" class="action-btn"><i class="fas fa-adjust"></i></button>
+                <button id="logoutBtn" class="action-btn logout"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="top-header">
+                <div class="header-content-wrapper">
+                    <div class="header-start">
+                        <button class="mobile-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                        <div class="greeting">
+                            <h1>مرحباً، <span class="highlight" id="adminNameDisplay">أدمن</span> 👋</h1>
+                            <p class="role-badge">Admin Access</p>
+                        </div>
+                    </div>
+                    
+                    <div class="header-widget">
+                        <div class="time-display"><i class="far fa-clock pulse-icon"></i><span id="liveTime">00:00:00</span><span id="ampm" class="ampm">AM</span></div>
+                        <div class="date-divider"></div>
+                        <div class="date-display"><i class="far fa-calendar-alt"></i><span id="liveDate">--/--/----</span></div>
+                    </div>
+                    <div class="admin-profile-large">
+                        <div class="profile-glow"></div>
+                        <img src="images/logo.png" alt="Admin Logo" onerror="this.src='https://via.placeholder.com/80'">
+                        <div class="online-indicator"></div>
+                    </div>
+                </div>
+            </header>
+
+            <section id="home" class="view-section active">
+                <div class="dashboard-grid">
+                    <div class="stat-box purple"><div class="stat-header"><div class="icon-box"><i class="fas fa-bullhorn"></i></div></div><div class="stat-data"><h3 class="counter" id="newsCount" data-target="0">0</h3><p>الأخبار المنشورة</p></div></div>
+                    <div class="stat-box orange"><div class="stat-header"><div class="icon-box"><i class="fas fa-star"></i></div></div><div class="stat-data"><h3 class="counter" id="starsCount" data-target="0">0</h3><p>النجوم المكرمين</p></div></div>
+                    <div class="stat-box green"><div class="stat-header"><div class="icon-box"><i class="fas fa-users"></i></div></div><div class="stat-data"><h3 class="counter" id="teamCount" data-target="0">0</h3><p>أعضاء الهيكل</p></div></div>
+                    <div class="stat-box blue"><div class="stat-header"><div class="icon-box"><i class="fas fa-handshake"></i></div></div><div class="stat-data"><h3 class="counter" id="partnersCount" data-target="0">0</h3><p>الشركاء</p></div></div>
+                </div>
+            </section>
+
+            <!-- قسم إدارة الهيكل التنظيمي -->
+            <section id="team" class="view-section">
+                <div class="section-title"><h2>إدارة الهيكل التنظيمي</h2></div>
+                <div class="glass-form">
+                    <form id="teamForm">
+                        <div class="input-grid">
+                            <div class="field-wrapper">
+                                <label>الاسم</label>
+                                <input type="text" id="teamName" required placeholder="مثال: محمد الشافعي">
+                            </div>
+                            <div class="field-wrapper">
+                                <label>الدور / المسمى الوظيفي</label>
+                                <input type="text" id="teamRole" required placeholder="مثال: رئيس الاتحاد / رئيس اللجنة">
+                            </div>
+                        </div>
+                        
+                        <div class="field-wrapper">
+                            <label>اللجنة / التصنيف</label>
+                            <select id="teamCommittee" required>
+                                <option value="" disabled selected>اختر التصنيف...</option>
+                                <option value="High Board">القيادة العليا (High Board)</option>
+                                <option value="الموارد البشرية">لجنة الموارد البشرية (HR)</option>
+                                <option value="العلاقات العامة">لجنة العلاقات العامة (PR)</option>
+                                <option value="التنظيم">لجنة التنظيم (OC)</option>
+                                <option value="المكتب الإعلامي">المكتب الإعلامي (Media)</option>
+                                <option value="التدريب والتطوير">لجنة التدريب (TD)</option>
+                            </select>
+                        </div>
+
+                        <div class="field-wrapper">
+                            <label>مقولة (تظهر في صفحة عن الاتحاد)</label>
+                            <textarea id="teamQuote" rows="2" placeholder="اكتب مقولة قصيرة..."></textarea>
+                        </div>
+
+                        <div class="input-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="field-wrapper"><label><i class="fab fa-facebook"></i> فيسبوك</label><input type="url" id="teamFB"></div>
+                            <div class="field-wrapper"><label><i class="fab fa-instagram"></i> انستجرام</label><input type="url" id="teamInsta"></div>
+                            <div class="field-wrapper"><label><i class="fab fa-linkedin"></i> لينكد إن</label><input type="url" id="teamLinkedIn"></div>
+                        </div>
+
+                        <div class="upload-area">
+                            <input type="file" id="teamImage" accept="image/*">
+                            <div class="upload-icon"><i class="fas fa-user-tie"></i></div>
+                            <p>الصورة الشخصية</p>
+                        </div>
+
+                        <button type="submit" class="submit-btn">إضافة العضو</button>
+                    </form>
+                </div>
+                <div class="manage-list-container">
+                    <h3><i class="fas fa-sitemap"></i> أعضاء الهيكل الحاليين</h3>
+                    <div class="manage-grid" id="manageTeamGrid"></div>
+                </div>
+            </section>
+
+            <section id="news" class="view-section">
+                <div class="section-title"><h2>نشر خبر جديد</h2></div>
+                <div class="glass-form">
+                    <form id="newsForm">
+                        <div class="input-grid">
+                            <div class="field-wrapper"><label>العنوان</label><input type="text" id="newsTitle" required></div>
+                            <div class="field-wrapper"><label>التاريخ</label><input type="text" id="newsDate" required></div>
+                        </div>
+                        <div class="field-wrapper"><label>رابط الفيسبوك</label><input type="url" id="newsLink" required></div>
+                        <div class="field-wrapper"><label>التفاصيل</label><textarea id="newsContent" rows="4" required></textarea></div>
+                        <div class="upload-area"><input type="file" id="newsImage" accept="image/*"><div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div><p>صورة الخبر</p></div>
+                        <button type="submit" class="submit-btn">نشر الخبر</button>
+                    </form>
+                </div>
+                <div class="manage-list-container">
+                    <h3><i class="fas fa-history"></i> الأخبار الحالية</h3>
+                    <div class="manage-grid" id="manageNewsGrid"></div>
+                </div>
+            </section>
+
+            <section id="stars" class="view-section">
+                <div class="section-title"><h2>إضافة نجم</h2></div>
+                <div class="glass-form">
+                    <form id="starsForm">
+                        <div class="input-grid">
+                            <div class="field-wrapper"><label>الاسم</label><input type="text" id="starName" required></div>
+                            <div class="field-wrapper"><label>اللجنة</label><select id="starCommittee" required><option value="" disabled selected>اختر اللجنة...</option><option value="الموارد البشرية">الموارد البشرية</option><option value="العلاقات العامة">العلاقات العامة</option><option value="التنظيم">التنظيم</option><option value="المكتب الإعلامي">المكتب الإعلامي</option><option value="التدريب والتطوير">التدريب والتطوير</option></select></div>
+                        </div>
+                        <div class="upload-area"><input type="file" id="starImage" accept="image/*"><div class="upload-icon"><i class="fas fa-user-circle"></i></div><p>صورة العضو</p></div>
+                        <button type="submit" class="submit-btn">إضافة النجم</button>
+                    </form>
+                </div>
+                <div class="manage-list-container">
+                    <h3><i class="fas fa-users"></i> قائمة النجوم</h3>
+                    <div class="manage-grid" id="manageStarsGrid"></div>
+                </div>
+            </section>
+
+            <section id="partners" class="view-section">
+                <div class="section-title"><h2>إضافة شريك</h2></div>
+                <div class="glass-form">
+                    <form id="partnersForm">
+                        <div class="input-grid">
+                            <div class="field-wrapper"><label>الاسم</label><input type="text" id="partnerName" required></div>
+                            <div class="field-wrapper"><label>الرابط</label><input type="url" id="partnerLink"></div>
+                        </div>
+                        <div class="upload-area"><input type="file" id="partnerImage" accept="image/*"><div class="upload-icon"><i class="fas fa-image"></i></div><p>الشعار</p></div>
+                        <button type="submit" class="submit-btn">حفظ الشريك</button>
+                    </form>
+                </div>
+                <div class="manage-list-container">
+                    <h3><i class="fas fa-handshake"></i> الشركاء الحاليون</h3>
+                    <div class="manage-grid" id="managePartnersGrid"></div>
+                </div>
+            </section>
+
+            <section id="logs" class="view-section">
+                <div class="section-title"><h2><i class="fas fa-list-ul"></i> سجل النشاطات</h2></div>
+                <div class="logs-container" id="logsList">
+                    <div style="text-align:center; padding:20px; color:var(--text-muted);">
+                        <i class="fas fa-circle-notch fa-spin"></i> جاري تحميل السجل...
+                    </div>
+                </div>
+            </section>
+
+            <section id="settings" class="view-section">
+                <div class="section-title"><h2>إعدادات الحساب</h2></div>
+                <div class="glass-form" style="max-width: 500px;">
+                    <div class="settings-header"><i class="fas fa-user-shield"></i><h3>تغيير كلمة المرور</h3><p>تحديث الأمان</p></div>
+                    <form id="changePasswordForm">
+                        <div class="field-wrapper"><label>الحالية</label><input type="password" id="currentPass" required></div>
+                        <div class="field-wrapper"><label>الجديدة</label><input type="password" id="newPass" required></div>
+                        <div class="field-wrapper"><label>تأكيد الجديدة</label><input type="password" id="confirmPass" required></div>
+                        <button type="submit" class="submit-btn" style="background:var(--accent); color:#000;"><i class="fas fa-save"></i> حفظ</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="loader-backdrop" id="loader"><div class="hexagon-loader"></div></div>
+    <!-- تصحيح المسار: js/dashboard.js -->
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

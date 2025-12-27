@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>انضم إلينا - اتحاد طلاب تحيا مصر - محافظة المنوفية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* ============================================================
+           🚀 Performance Fix: الخلفية السريعة لصفحة الانضمام
+           ============================================================ */
+        body.join-page {
+            position: relative;
+            z-index: 0;
+            background-color: transparent; /* إزالة الخلفية من الجسم نفسه */
+            min-height: 100vh;
+        }
+
+        /* طبقة الخلفية الثابتة (أداء عالي) */
+        body.join-page::before {
+            content: '';
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            
+            /* ألوان الخلفية (الوضع الفاتح) */
+            background-color: #f3f4f6;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-size: cover;
+            transition: background 0.3s ease;
+        }
+
+        /* تنسيق الحاوية الزجاجية */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 900px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s, border 0.3s;
+            /* تحسين الأداء عند التحريك */
+            transform: translateZ(0); 
+        }
+
+        /* شريط علوي ملون داخل البطاقة */
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #8e44ad, #3498db, #e74c3c);
+        }
+
+        .form-header-modern {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header-modern h1 {
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #2d3748 0%, #8e44ad 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .form-header-modern p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        /* شريط الخطوات المتطور */
+        .steps-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .steps-progress {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .steps-progress::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            transform: translateY(-50%);
+            z-index: 0;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8e44ad, #9b59b6);
+            transform: translateY(-50%);
+            z-index: 0;
+            transition: width 0.4s ease;
+            border-radius: 10px;
+            width: 0%; 
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 1;
+            background: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #a0aec0;
+            border: 3px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active {
+            border-color: #8e44ad;
+            color: #8e44ad;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 5px rgba(142, 68, 173, 0.1);
+        }
+
+        .step-item.completed {
+            background: #8e44ad;
+            border-color: #8e44ad;
+            color: #fff;
+        }
+
+        /* حقول الإدخال العصرية */
+        .modern-input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .modern-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        .modern-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .modern-input-wrapper i {
+            position: absolute;
+            right: 16px;
+            color: #a0aec0;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            pointer-events: none;
+        }
+
+        .modern-input-wrapper input,
+        .modern-input-wrapper select,
+        .modern-input-wrapper textarea {
+            width: 100%;
+            padding: 14px 45px 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            color: #2d3748;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .modern-input-wrapper input:focus,
+        .modern-input-wrapper select:focus,
+        .modern-input-wrapper textarea:focus {
+            border-color: #8e44ad;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(142, 68, 173, 0.1);
+        }
+
+        .modern-input-wrapper input:focus + i {
+            color: #8e44ad;
+        }
+
+        /* بطاقات اللجان */
+        .committee-cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .radio-card {
+            position: relative;
+        }
+
+        .radio-card input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .card-content {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-content i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #a0aec0;
+            transition: all 0.3s ease;
+        }
+        
+        .card-content span {
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .radio-card input:checked + .card-content {
+            border-color: #8e44ad;
+            background: rgba(142, 68, 173, 0.04);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(142, 68, 173, 0.1);
+        }
+
+        .radio-card input:checked + .card-content i {
+            color: #8e44ad;
+            transform: scale(1.1);
+        }
+        
+        .radio-card input:checked + .card-content span {
+            color: #8e44ad;
+            font-weight: 700;
+        }
+
+        /* أزرار التحكم */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .action-btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+            margin-right: auto;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(142, 68, 173, 0.4);
+        }
+        
+        .btn-next:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-prev {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .btn-prev:hover {
+            background: #e2e8f0;
+        }
+
+        /* رسائل الخطأ والتحميل */
+        .error-hint {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .error-hint.show { display: block; }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #8e44ad;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .success-message {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* قسم التأكيد */
+        #confirmationData {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: right;
+            border: 1px solid #edf2f7;
+            color: #2d3748;
+        }
+
+        /* الوضع الليلي (محدث للخلفية السريعة) */
+        body.dark-mode.join-page::before {
+            background-color: #1a202c;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,15%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,20%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,20%,1) 0, transparent 50%);
+        }
+
+        body.dark-mode .glass-container {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode .form-header-modern h1 {
+            background: linear-gradient(135deg, #e2e8f0 0%, #d6bcfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        body.dark-mode .form-header-modern p { color: #cbd5e1; }
+        body.dark-mode .modern-input-group label { color: #e2e8f0; }
+        body.dark-mode .modern-input-wrapper input,
+        body.dark-mode .modern-input-wrapper select,
+        body.dark-mode .modern-input-wrapper textarea {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #f7fafc;
+        }
+        body.dark-mode .modern-input-wrapper input:focus,
+        body.dark-mode .modern-input-wrapper select:focus,
+        body.dark-mode .modern-input-wrapper textarea:focus {
+            border-color: #9b59b6;
+            background: #2d3748;
+        }
+        body.dark-mode .step-item {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #cbd5e1;
+        }
+        body.dark-mode .step-item.active {
+            border-color: #9b59b6;
+            color: #9b59b6;
+        }
+        body.dark-mode .card-content {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        body.dark-mode .card-content span { color: #cbd5e1; }
+        body.dark-mode .radio-card input:checked + .card-content {
+            border-color: #9b59b6;
+            background: rgba(155, 89, 182, 0.1);
+        }
+        body.dark-mode #confirmationData {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        body.dark-mode h3 {
+            color: #e2e8f0 !important;
+            border-bottom-color: #4a5568 !important;
+        }
+        body.dark-mode .loading-overlay {
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        /* الموبايل */
+        @media (max-width: 768px) {
+            .glass-container {
+                padding: 25px;
+                margin: 20px 15px;
+            }
+            .form-header-modern h1 { font-size: 1.8rem; }
+            .committee-cards-container { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body class="join-page">
+
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="شعار الاتحاد">
+                <span>اتحاد طلاب تحيا مصر<br>محافظة المنوفية</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="about.html">عن الاتحاد</a></li>
+                <li><a href="committees.html">اللجان</a></li>
+                <li><a href="stars.html">نجوم الشهر</a></li>
+                <li><a href="events.html">الفعاليات</a></li>
+                <li><a href="partners.html">الشركاء</a></li>
+                <li><a href="join.html" class="nav-cta">انضم إلينا</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+        </nav>
+    </header>
+
+    <main class="page-content">
+        <div class="glass-container">
+            
+            <!-- شاشة تحميل -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner"></div>
+                <h3 style="margin-top: 20px; color: #8e44ad;">جاري إرسال بياناتك...</h3>
+                <p>يرجى الانتظار (قد يستغرق رفع الصورة بضع ثوانٍ)</p>
+            </div>
+
+            <!-- رسالة النجاح -->
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle" style="font-size: 5rem; color: #48bb78; margin-bottom: 20px;"></i>
+                <h2 style="color: #2d3748; margin-bottom: 10px;">تم التسجيل بنجاح!</h2>
+                <p style="color: #718096; margin-bottom: 30px;">شكراً لانضمامك إلينا، سنتواصل معك قريباً.</p>
+                <a href="index.html" class="cta-button" style="background: #8e44ad; color: white; padding: 10px 30px; border-radius: 50px; text-decoration: none;">عودة للرئيسية</a>
+            </div>
+
+            <div id="formContent">
+                <div class="form-header-modern">
+                    <h1>استمارة الانضمام</h1>
+                    <p>خطوتك الأولى نحو القيادة والتميز</p>
+                </div>
+
+                <div class="steps-wrapper">
+                    <div class="steps-progress">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <div class="step-item active" data-step="1">1</div>
+                        <div class="step-item" data-step="2">2</div>
+                        <div class="step-item" data-step="3">3</div>
+                        <div class="step-item" data-step="4"><i class="fas fa-check"></i></div>
+                    </div>
+                </div>
+
+                <form id="joinForm">
+                    
+                    <!-- الخطوة 1: البيانات الشخصية -->
+                    <div class="form-step active" data-step="1">
+                        <h3 style="color: #4a5568; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                            البيانات الشخصية
+                        </h3>
+
+                        <div class="modern-input-group">
+                            <label>الاسم الكامل</label>
+                            <div class="modern-input-wrapper">
+                                <input type="text" id="fullName" name="fullName" placeholder="الاسم رباعي باللغة العربية" required>
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="error-hint" id="fullNameError">يرجى كتابة الاسم الرباعي</div>
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label>رقم الهاتف (واتساب)</label>
+                            <div class="modern-input-wrapper">
+                                <input type="tel" id="phone" name="phone" placeholder="01xxxxxxxxx" required>
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="error-hint" id="phoneError">رقم الهاتف يجب أن يبدأ بـ 01 ويتكون من 11 رقم</div>
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label>البريد الإلكتروني</label>
+                            <div class="modern-input-wrapper">
+                                <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="error-hint" id="emailError">بريد إلكتروني غير صحيح</div>
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label>تاريخ الميلاد</label>
+                            <div class="modern-input-wrapper">
+                                <input type="date" id="birthdate" name="birthdate" required>
+                            </div>
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label>الصورة الشخصية</label>
+                            <div class="modern-input-wrapper" style="display: block;">
+                                <input type="file" id="profilePic" name="profilePic" accept="image/*" style="padding: 10px;" required>
+                                <small style="color: #718096; display: block; margin-top: 5px;">يفضل صورة رسمية بخلفية بيضاء (الحد الأقصى 2 ميجا)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الخطوة 2: التعليم -->
+                    <div class="form-step" data-step="2" style="display: none;">
+                        <h3 style="color: #4a5568; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                            البيانات الدراسية
+                        </h3>
+
+                        <div class="modern-input-group">
+                            <label>الجامعة</label>
+                            <div class="modern-input-wrapper">
+                                <input type="text" id="university" name="university" placeholder="مثال: جامعة المنوفية" required>
+                                <i class="fas fa-university"></i>
+                            </div>
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label>الكلية</label>
+                            <div class="modern-input-wrapper">
+                                <input type="text" id="faculty" name="faculty" placeholder="مثال: كلية الهندسة" required>
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label>السنة الدراسية</label>
+                            <div class="modern-input-wrapper">
+                                <select id="year" name="year" required>
+                                    <option value="">اختر الفرقة الدراسية</option>
+                                    <option value="الأولى">الفرقة الأولى</option>
+                                    <option value="الثانية">الفرقة الثانية</option>
+                                    <option value="الثالثة">الفرقة الثالثة</option>
+                                    <option value="الرابعة">الفرقة الرابعة</option>
+                                    <option value="الخامسة">الفرقة الخامسة</option>
+                                </select>
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label>القسم / التخصص</label>
+                            <div class="modern-input-wrapper">
+                                <input type="text" id="major" name="major" placeholder="مثال: هندسة مدني">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الخطوة 3: اللجان والمهارات -->
+                    <div class="form-step" data-step="3" style="display: none;">
+                        <h3 style="color: #4a5568; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                            اختر لجنتك
+                        </h3>
+
+                        <div class="modern-input-group">
+                            <label style="margin-bottom: 15px;">اللجان المتاحة <span style="font-weight: normal; font-size: 0.8rem;">(يمكنك اختيار أكثر من لجنة)</span></label>
+                            <div class="committee-cards-container">
+                                <!-- HR -->
+                                <label class="radio-card">
+                                    <input type="checkbox" name="committees" value="الموارد البشرية">
+                                    <div class="card-content">
+                                        <i class="fas fa-users-cog"></i>
+                                        <span>الموارد البشرية</span>
+                                    </div>
+                                </label>
+                                <!-- PR -->
+                                <label class="radio-card">
+                                    <input type="checkbox" name="committees" value="العلاقات العامة">
+                                    <div class="card-content">
+                                        <i class="fas fa-handshake"></i>
+                                        <span>العلاقات العامة</span>
+                                    </div>
+                                </label>
+                                <!-- OC -->
+                                <label class="radio-card">
+                                    <input type="checkbox" name="committees" value="التنظيم">
+                                    <div class="card-content">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>التنظيم</span>
+                                    </div>
+                                </label>
+                                <!-- Media -->
+                                <label class="radio-card">
+                                    <input type="checkbox" name="committees" value="المكتب الإعلامي">
+                                    <div class="card-content">
+                                        <i class="fas fa-camera"></i>
+                                        <span>الميديا</span>
+                                    </div>
+                                </label>
+                                <!-- T&D -->
+                                <label class="radio-card">
+                                    <input type="checkbox" name="committees" value="التدريب والتطوير">
+                                    <div class="card-content">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        <span>التدريب</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="error-hint" id="committeesError">يجب اختيار لجنة واحدة على الأقل</div>
+                        </div>
+
+                        <div class="modern-input-group">
+                            <label>لماذا تريد الانضمام إلينا؟</label>
+                            <div class="modern-input-wrapper">
+                                <textarea id="motivation" name="motivation" rows="3" placeholder="أخبرنا عن هدفك من الانضمام وماذا يمكنك أن تقدم..." required></textarea>
+                            </div>
+                            <div class="error-hint" id="motivationError">هذا الحقل مطلوب</div>
+                        </div>
+                    </div>
+
+                    <!-- الخطوة 4: تأكيد -->
+                    <div class="form-step" data-step="4" style="display: none;">
+                        <div style="text-align: center; padding: 20px;">
+                            <i class="fas fa-check-circle" style="font-size: 4rem; color: #48bb78; margin-bottom: 20px;"></i>
+                            <h3 style="margin-bottom: 10px; color: #2d3748;">جاهز للإرسال!</h3>
+                            <p style="color: #718096; margin-bottom: 30px;">يرجى مراجعة ملخص بياناتك أدناه قبل التأكيد</p>
+                            
+                            <div id="confirmationData">
+                                <!-- Data populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- أزرار التحكم -->
+                    <div class="action-buttons">
+                        <button type="button" class="action-btn btn-prev" id="prevBtn" style="visibility: hidden;">
+                            <i class="fas fa-arrow-right"></i> السابق
+                        </button>
+                        <button type="button" class="action-btn btn-next" id="nextBtn">
+                            التالي <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <button type="submit" class="action-btn btn-next" id="submitBtn" style="display: none; background: #48bb78;">
+                            إرسال الطلب <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            <p>تواصل معنا عبر وسائل التواصل الاجتماعي</p>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/TahyaMasrStudentsUnionMNF/?locale=ar_AR" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            </div>
+            <p>&copy; 2025 اتحاد طلاب تحيا مصر - المنوفية.</p>
+        </div>
+    </footer>
+
+    <!-- سكريبتات أساسية -->
+    <script src="js/script.js"></script>
+    <script>
+        // رابط الاسكربت الخاص بك
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxkZdCx9aNfb3MXc_iKy4DKX4MjrI1iPJRHLLyLDIr_RZ0AIFrP-vVDvi13QcL3DqfHew/exec'; 
+
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressFill = document.getElementById('progressFill');
+        const form = document.forms['joinForm'];
+
+        // التعامل مع الإرسال
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            // إظهار التحميل
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            const fileInput = document.getElementById('profilePic');
+            const file = fileInput.files[0];
+            
+            // قراءة الصورة وتحويلها لـ Base64
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                const base64Data = reader.result.split(',')[1]; // حذف الجزء الأولي (data:image/...)
+                
+                const formData = {
+                    fullName: document.getElementById('fullName').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    birthdate: document.getElementById('birthdate').value,
+                    university: document.getElementById('university').value,
+                    faculty: document.getElementById('faculty').value,
+                    year: document.getElementById('year').value,
+                    major: document.getElementById('major').value,
+                    committees: Array.from(document.querySelectorAll('input[name="committees"]:checked')).map(cb => cb.value).join(', '),
+                    motivation: document.getElementById('motivation').value,
+                    fileName: file.name,
+                    fileType: file.type,
+                    fileData: base64Data
+                };
+
+                // إرسال البيانات
+                fetch(scriptURL, { method: 'POST', body: JSON.stringify(formData) })
+                    .then(response => {
+                        document.getElementById('loadingOverlay').style.display = 'none';
+                        document.getElementById('formContent').style.display = 'none';
+                        document.getElementById('successMessage').style.display = 'block';
+                        window.scrollTo(0,0);
+                    })
+                    .catch(error => {
+                        document.getElementById('loadingOverlay').style.display = 'none';
+                        alert('حدث خطأ أثناء الإرسال! تأكد من اتصالك بالإنترنت وحاول مرة أخرى.');
+                        console.error('Error!', error.message);
+                    });
+            };
+            
+            reader.onerror = function(error) {
+                console.log('Error: ', error);
+                alert('حدث خطأ أثناء قراءة الملف');
+            };
+        });
+
+        // تحديث شريط التقدم
+        function updateProgress() {
+            const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressFill.style.width = percentage + '%';
+
+            document.querySelectorAll('.step-item').forEach((item, index) => {
+                const stepNum = index + 1;
+                if (stepNum < currentStep) {
+                    item.classList.add('completed');
+                    item.classList.remove('active');
+                    if(stepNum < 4) item.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (stepNum === currentStep) {
+                    item.classList.add('active');
+                    item.classList.remove('completed');
+                    if(stepNum < 4) item.innerHTML = stepNum;
+                } else {
+                    item.classList.remove('active', 'completed');
+                    if(stepNum < 4) item.innerHTML = stepNum;
+                }
+            });
+
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.style.display = 'none';
+                step.classList.remove('active');
+            });
+            const currentStepDiv = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+            currentStepDiv.style.display = 'block';
+            
+            currentStepDiv.animate([
+                { opacity: 0, transform: 'translateY(10px)' },
+                { opacity: 1, transform: 'translateY(0)' }
+            ], { duration: 300, fill: 'forwards' });
+
+            if (currentStep === 1) prevBtn.style.visibility = 'hidden';
+            else prevBtn.style.visibility = 'visible';
+
+            if (currentStep === totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'flex';
+                populateConfirmation();
+            } else {
+                nextBtn.style.display = 'flex';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (validateCurrentStep()) {
+                currentStep++;
+                updateProgress();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentStep--;
+            updateProgress();
+        });
+
+        function validateCurrentStep() {
+            let isValid = true;
+            
+            if (currentStep === 1) {
+                isValid &= validateInput('fullName', /^[\u0600-\u06FF\s]{6,}$/);
+                isValid &= validateInput('phone', /^01[0-2,5]{1}[0-9]{8}$/);
+                isValid &= validateInput('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+                isValid &= validateSimple('birthdate');
+                isValid &= validateSimple('profilePic');
+            } else if (currentStep === 2) {
+                isValid &= validateSimple('university');
+                isValid &= validateSimple('faculty');
+                isValid &= validateSimple('year');
+            } else if (currentStep === 3) {
+                isValid &= validateCheckboxes();
+                isValid &= validateInput('motivation', /.{5,}/);
+            }
+
+            return !!isValid;
+        }
+
+        function validateInput(id, regex) {
+            const el = document.getElementById(id);
+            const error = document.getElementById(id + 'Error');
+            if (!regex.test(el.value)) {
+                el.style.borderColor = '#e53e3e';
+                if(error) error.classList.add('show');
+                return false;
+            } else {
+                el.style.borderColor = '#48bb78';
+                if(error) error.classList.remove('show');
+                return true;
+            }
+        }
+
+        function validateSimple(id) {
+            const el = document.getElementById(id);
+            if (!el.value) {
+                el.style.borderColor = '#e53e3e';
+                return false;
+            }
+            el.style.borderColor = '#48bb78';
+            return true;
+        }
+
+        function validateCheckboxes() {
+            const checked = document.querySelectorAll('input[name="committees"]:checked');
+            const error = document.getElementById('committeesError');
+            if (checked.length === 0) {
+                error.classList.add('show');
+                return false;
+            }
+            error.classList.remove('show');
+            return true;
+        }
+
+        function populateConfirmation() {
+            const container = document.getElementById('confirmationData');
+            const name = document.getElementById('fullName').value;
+            const phone = document.getElementById('phone').value;
+            const faculty = document.getElementById('faculty').value;
+            const comms = Array.from(document.querySelectorAll('input[name="committees"]:checked'))
+                               .map(cb => cb.value).join('، ');
+
+            container.innerHTML = `
+                <p><strong>الاسم:</strong> ${name}</p>
+                <p><strong>الهاتف:</strong> ${phone}</p>
+                <p><strong>الكلية:</strong> ${faculty}</p>
+                <p><strong>اللجان:</strong> ${comms}</p>
+            `;
+        }
+
+        document.querySelectorAll('input, select, textarea').forEach(inp => {
+            inp.addEventListener('input', function() {
+                this.style.borderColor = '#e2e8f0';
+                const err = document.getElementById(this.id + 'Error');
+                if(err) err.classList.remove('show');
+            });
+        });
+    </script>
+        <script src="js/chatbot.js"></script>
+</body>
+</html>

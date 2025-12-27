@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اتحاد طلاب تحيا مصر - المنوفية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* ============================================================
+           🚀 Performance Fix: الخلفية السريعة
+           تم فصل الخلفية في عنصر مستقل لتسريع التمرير
+           ============================================================ */
+        body {
+            position: relative;
+            z-index: 0;
+            background-color: transparent; /* إزالة اللون من الجسم الأساسي */
+        }
+
+        /* هذه الطبقة هي التي تحمل الخلفية وتظل ثابتة دون التأثير على الأداء */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            z-index: -1; /* خلف المحتوى */
+            pointer-events: none; /* لا تتداخل مع النقرات */
+            
+            /* ألوان الخلفية (الوضع الفاتح) */
+            background-color: #f0f2f5;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(142, 68, 173, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(52, 152, 219, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(155, 89, 182, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(46, 204, 113, 0.1) 0px, transparent 50%);
+            background-size: cover;
+            /* تم إزالة background-attachment: fixed لأن العنصر نفسه fixed */
+        }
+
+        /* ألوان الخلفية (الوضع الليلي) */
+        body.dark-mode::before {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(142, 68, 173, 0.25) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(52, 152, 219, 0.2) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(155, 89, 182, 0.2) 0px, transparent 50%);
+        }
+
+        /* ------------------------------------------- */
+
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.85), rgba(142, 68, 173, 0.75)), url('images/hero-bg.jpg') no-repeat center center/cover;
+            height: 85vh;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 60px;
+            /* تحسين الأداء للصورة الكبيرة */
+            will-change: transform; 
+        }
+
+        .hero-content h1 {
+            font-size: clamp(1.8rem, 4vw, 3rem); 
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .stats-section {
+            background: transparent;
+            margin-top: -100px;
+            padding-bottom: 40px;
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); /* لدعم سفاري */
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border-radius: 25px;
+            padding: 50px 30px;
+            transform: translateZ(0); /* تفعيل تسريع الهاردوير */
+            transition: transform 0.3s ease;
+        }
+
+        .stats:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-item i {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+
+        .latest-news-section {
+            text-align: center;
+        }
+
+        .news-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .news-card {
+            flex: 0 1 350px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            transition: transform 0.3s ease, background 0.3s ease;
+            text-align: right;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            
+            /* 🚀 Performance: تحسين الأداء عند التحريك */
+            will-change: transform;
+            transform: translateZ(0);
+        }
+
+        .news-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(142, 68, 173, 0.15);
+        }
+
+        .news-image {
+            height: 280px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            background-color: #2c3e50;
+        }
+
+        .news-image::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-position: center;
+            filter: blur(15px) brightness(0.7);
+            transform: scale(1.1);
+            z-index: 0;
+        }
+
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.5s ease;
+            /* 🚀 إضافة: تسريع عرض الصور */
+            content-visibility: auto; 
+        }
+
+        .news-card:hover .news-image img {
+            transform: scale(1.05);
+        }
+
+        .news-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .news-content h3 {
+            color: #2c3e50;
+            font-weight: 800;
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+        }
+
+        .committees-preview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px 10px;
+        }
+
+        .committee-icon {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 25px 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex: 0 1 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+            will-change: transform; /* تحسين الأداء */
+        }
+
+        .committee-icon:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(142, 68, 173, 0.15);
+            border-color: rgba(142, 68, 173, 0.2);
+        }
+
+        .committee-icon i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 50%;
+            background: rgba(142, 68, 173, 0.08);
+            color: #8e44ad;
+            transition: all 0.3s ease;
+        }
+
+        .committee-icon:hover i {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: #fff;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .committee-icon p {
+            font-weight: 700;
+            color: #4a4a4a;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .committees-preview { gap: 15px; }
+            .committee-icon { flex: 0 0 calc(50% - 10px); max-width: calc(50% - 10px); padding: 20px 10px; min-height: 140px; }
+            .committee-icon i { width: 50px; height: 50px; line-height: 50px; font-size: 1.5rem; }
+            .committee-icon p { font-size: 0.85rem; }
+        }
+
+        /* Dark Mode */
+        body.dark-mode .stats {
+            background: rgba(30, 41, 59, 0.8);
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        body.dark-mode .news-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: none;
+        }
+        body.dark-mode .news-card:hover {
+            background: rgba(30, 41, 59, 0.9);
+        }
+        body.dark-mode .news-content h3 { color: #f1f5f9; }
+        body.dark-mode .committee-icon {
+            background: rgba(30, 41, 59, 0.7);
+            border: none;
+        }
+        body.dark-mode .committee-icon p { color: #e2e8f0; }
+        body.dark-mode .hero {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(88, 28, 135, 0.8)), url('images/hero-bg.jpg') no-repeat center center/cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="preloader"><div class="spinner"></div></div>
+
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="شعار الاتحاد">
+                <span>اتحاد طلاب تحيا مصر<br>محافظة المنوفية</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">الرئيسية</a></li>
+                <li><a href="about.html">عن الاتحاد</a></li>
+                <li><a href="committees.html">اللجان</a></li>
+                <li><a href="stars.html">نجوم الشهر</a></li>
+                <li><a href="events.html">الفعاليات</a></li>
+                <li><a href="partners.html">الشركاء</a></li>
+                <li><a href="join.html" class="nav-cta">انضم إلينا</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1 data-aos="fade-up">قيادة، تنمية، إبداع</h1>
+                <p data-aos="fade-up" data-aos-delay="200">نصنع قادة الغد في قلب محافظة المنوفية.<br>انضم إلينا لتكون جزءًا من التغيير.</p>
+                <a href="committees.html" class="cta-button" data-aos="fade-up" data-aos-delay="400">استكشف لجاننا</a>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="container stats" data-aos="fade-up">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <h3 class="counter" data-target="100">0</h3>
+                    <p>عضو فعال</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3 class="counter" data-target="11">0</h3>
+                    <p>فعالية ناجحة</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-hands-helping"></i>
+                    <h3 class="counter" data-target="4">0</h3>
+                    <p>مبادرة مجتمعية</p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3 class="counter" data-target="5">0</h3>
+                    <p>لجان متخصصة</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="latest-news-section container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>آخر الأخبار والفعاليات</h2>
+                <p>تابع أحدث أنشطتنا ومبادراتنا مباشرة من صفحاتنا على وسائل التواصل الاجتماعي.</p>
+            </div>
+            
+            <div class="news-grid"></div>
+
+            <div class="section-footer" data-aos="fade-up">
+                <a href="events.html" class="cta-button-secondary">عرض كل الفعاليات</a>
+            </div>
+        </section>
+
+        <section class="quick-committees container">
+            <h2 data-aos="fade-up">لجاننا: محرك الإبداع</h2>
+            <div class="committees-preview">
+                <div class="committee-icon" data-aos="zoom-in" data-aos-delay="100"><i class="fas fa-sitemap"></i><p>الموارد البشرية</p></div>
+                <div class="committee-icon" data-aos="zoom-in" data-aos-delay="200"><i class="fas fa-globe-americas"></i><p>العلاقات العامة والدولية</p></div>
+                <div class="committee-icon" data-aos="zoom-in" data-aos-delay="300"><i class="fas fa-tasks"></i><p>التنظيم والمراسم</p></div>
+                <div class="committee-icon" data-aos="zoom-in" data-aos-delay="400"><i class="fas fa-bullhorn"></i><p>المكتب الإعلامي</p></div>
+                <div class="committee-icon" data-aos="zoom-in" data-aos-delay="500"><i class="fas fa-chalkboard-teacher"></i><p>التدريب والتطوير</p></div>
+            </div>
+            <a href="committees.html" class="cta-button-secondary" data-aos="fade-up">تعرف على المزيد</a>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            <p>تواصل معنا عبر وسائل التواصل الاجتماعي</p>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/TahyaMasrStudentsUnionMNF/?locale=ar_AR" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            </div>
+            <p>&copy; 2025 اتحاد طلاب تحيا مصر - المنوفية.</p>
+            
+            <div style="opacity:0.2; margin-top:10px;">
+                <a href="admin.html" style="color:inherit; text-decoration:none;"><i class="fas fa-lock"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/sheet-loader.js"></script>
+    
+    <!-- 🤖 كود البوت الذكي (تمت إضافته) -->
+    <script src="js/chatbot-ui.js"></script>
+    <script src="js/chatbot-logic.js"></script>
+</body>
+</html>

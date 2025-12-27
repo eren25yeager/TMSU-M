@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الهيكل التنظيمي - تحيا مصر المنوفية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* --- تنسيق خاص ومطور لقادة الاتحاد --- */
+        .leadership-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-bottom: 60px;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* تنسيق الشبكة للصف الثاني (النائب والمنسق) */
+        .sub-leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px; 
+            justify-content: center;
+        }
+
+        .leader-card {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            padding: 30px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        /* تخصيص كارت الرئيس ليكون مميزاً في العرض */
+        .president-card-style {
+            max-width: 900px;
+            padding: 40px;
+        }
+
+        .leader-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(142, 68, 173, 0.15);
+        }
+
+        /* شريط جانبي ملون */
+        .leader-card::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(to bottom, #8e44ad, #3498db);
+        }
+
+        .leader-image-wrapper {
+            flex: 0 0 180px; 
+            height: 180px;
+            margin-left: 30px;
+            position: relative;
+        }
+
+        .president-card-style .leader-image-wrapper {
+            flex: 0 0 220px;
+            height: 220px;
+            margin-left: 40px;
+        }
+
+        .leader-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 6px solid #f8f9fa;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .leader-badge {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: #8e44ad;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-size: 1.1rem;
+        }
+
+        .leader-info {
+            flex: 1;
+            text-align: right;
+        }
+
+        .leader-role {
+            display: inline-block;
+            background: rgba(142, 68, 173, 0.1);
+            color: #8e44ad;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .leader-info h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .president-card-style .leader-info h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        .leader-quote {
+            color: #64748b;
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+            padding-right: 15px;
+            min-height: 20px;
+        }
+
+        .president-card-style .leader-quote {
+            font-size: 1.1rem;
+            padding-right: 20px;
+            margin-bottom: 25px;
+        }
+
+        .leader-quote::before {
+            content: '"';
+            position: absolute;
+            right: 0;
+            top: -10px;
+            font-size: 3rem;
+            color: rgba(142, 68, 173, 0.2);
+            font-family: serif;
+        }
+
+        .leader-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .leader-social a {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .leader-social a:hover {
+            background: #8e44ad;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Dark Mode */
+        body.dark-mode .leader-card {
+            background: #1e293b;
+            border-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode .leader-info h2 { color: #f1f5f9; }
+        body.dark-mode .leader-quote { color: #cbd5e1; }
+        
+        body.dark-mode .leader-role {
+            background: rgba(142, 68, 173, 0.2);
+            color: #d8b4fe;
+        }
+
+        body.dark-mode .leader-image-wrapper img {
+            border-color: #334155;
+        }
+
+        body.dark-mode .leader-badge { border-color: #1e293b; }
+        
+        body.dark-mode .leader-social a {
+            background: #334155;
+            color: #cbd5e1;
+        }
+        
+        body.dark-mode .leader-social a:hover {
+            background: #8e44ad;
+            color: #ffffff;
+        }
+
+        @media (max-width: 992px) {
+            .sub-leadership-grid {
+                grid-template-columns: 1fr; 
+            }
+            
+            .leader-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+            }
+
+            .leader-image-wrapper, .president-card-style .leader-image-wrapper {
+                margin-left: 0;
+                margin-bottom: 25px;
+                width: 160px;
+                height: 160px;
+                flex: 0 0 160px;
+            }
+
+            .leader-card::before {
+                width: 100%;
+                height: 6px;
+                right: 0;
+                top: 0;
+                bottom: auto;
+            }
+
+            .leader-info { text-align: center; }
+            .leader-social { justify-content: center; }
+            .leader-quote { padding-right: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="preloader"><div class="spinner"></div></div>
+
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="شعار الاتحاد">
+                <span>اتحاد طلاب تحيا مصر<br>محافظة المنوفية</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="about.html" class="active">عن الاتحاد</a></li>
+                <li><a href="committees.html">اللجان</a></li>
+                <li><a href="stars.html">نجوم الشهر</a></li>
+                <li><a href="events.html">الفعاليات</a></li>
+                <li><a href="partners.html">الشركاء</a></li>
+                <li><a href="join.html" class="nav-cta">انضم إلينا</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+        </nav>
+    </header>
+
+    <main class="container page-content">
+        <h1 data-aos="fade-down">هيكلنا التنظيمي: أساس قوتنا</h1>
+        <p data-aos="fade-up" class="page-intro">نؤمن بأن التنظيم القوي هو سر النجاح. تعرف على القادة الذين يقودون مسيرة الإنجاز في محافظة المنوفية.</p>
+        
+        <!-- سيتم تحميل المحتوى هنا ديناميكياً -->
+        <section class="leadership-container" id="highBoardContainer" data-aos="zoom-in-up">
+             <div class="loader-placeholder" style="text-align:center;"><div class="spinner"></div><p>جاري تحميل الهيكل...</p></div>
+        </section>
+
+        <section class="org-chart" id="committeesContainer" data-aos="fade-up" data-aos-delay="200">
+             <!-- اللجان هنا -->
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            <p>تواصل معنا عبر وسائل التواصل الاجتماعي</p>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/TahyaMasrStudentsUnionMNF/?locale=ar_AR" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            </div>
+            <p>&copy; 2025 اتحاد طلاب تحيا مصر - المنوفية.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/sheet-loader.js"></script>
+</body>
+</html>
