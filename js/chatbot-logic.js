@@ -19,7 +19,7 @@
             "xiaomi/mimo-v2-flash:free", 
             "google/gemini-2.0-flash-exp:free"
         ],
-        MAX_MESSAGES_PER_SESSION: 500,
+        MAX_MESSAGES_PER_SESSION: 100000,
         SITE_URL: window.location.origin,
         SITE_TITLE: "Tahya Masr Student Union Chatbot"
     };
@@ -310,5 +310,6 @@ IMPORTANT INSTRUCTIONS FOR AI:
         initBot();
     }
 })();
+
 
 
