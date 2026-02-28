@@ -16,8 +16,8 @@
         API_KEY: "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", 
         // الموديلات المستخدمة
         MODELS: [
-            "liquid/lfm-2.5-1.2b-thinking:free", 
-            "nvidia/nemotron-3-nano-30b-a3b:free"
+            "qwen/qwen3-next-80b-a3b-instruct:free", 
+            "openai/gpt-oss-120b:free"
         ],
         MAX_MESSAGES_PER_SESSION: 100000,
         SITE_URL: window.location.origin,
@@ -310,6 +310,7 @@ IMPORTANT INSTRUCTIONS FOR AI:
         initBot();
     }
 })();
+
 
 
 
