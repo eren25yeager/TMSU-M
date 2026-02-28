@@ -1,26 +1,28 @@
 /*
  * ==========================================================================
- * 🧠 Tahya Masr Chatbot - Logic Module (v10.5 - Strict Arabic Mode)
+ * 🧠 Tahya Masr Chatbot - Logic Module (v10.5.1 - Fixed & Stable)
  * ==========================================================================
- * - الموديل: xiaomi/mimo-v2-flash:free (كما طلبت).
- * - الحل: تعليمات نظام صارمة جداً لمنع اللغة الصينية.
+ * - الموديل: Llama 3.3 و Hermes 3 (مفتوحة المصدر / مجانية عبر OpenRouter).
+ * - الحل: تم إصلاح أخطاء الذاكرة (Memory Limit) وحماية ضد سقوط الخوادم.
  */
 
 (function() {
+    // التأكد من تحميل الواجهة أولاً
     if (!window.TMChatUI) {
-        console.error("خطأ: يجب استدعاء ملف chatbot-ui.js قبل هذا الملف!");
+        console.error("خطأ: يجب استدعاء ملف chatbot-ui.js في الـ HTML قبل هذا الملف!");
         return;
     }
 
     const CONFIG = {
-        API_KEY: "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", 
-        // الموديلات المستخدمة
+        API_KEY: "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", 
+        // الموديلات المستخدمة في جروق (Groq)
         MODELS: [
-            "qwen/qwen3-next-80b-a3b-instruct:free", 
-            "openai/gpt-oss-120b:free"
+            "llama-3.3-70b-versatile", // الموديل الأساسي (ذكي جداً وسريع)
+            "llama3-8b-8192"           // الموديل الاحتياطي
         ],
         MAX_MESSAGES_PER_SESSION: 100000,
-        SITE_URL: window.location.origin,
+        MEMORY_LIMIT: 15, // [تم الإصلاح] هذا المتغير كان مفقوداً ويسبب خطأ
+        SITE_URL: window.location.origin || "https://tahyamasr.org",
         SITE_TITLE: "Tahya Masr Student Union Chatbot"
     };
 
@@ -33,7 +35,6 @@
         "النقل": "وفقاً للمادة 30، يحق النقل مرة كل 6 أشهر بطلب رسمي وموافقة اللجنتين."
     };
 
-    // --- هنا يكمن الحل (تعليمات صارمة) ---
     const SITE_KNOWLEDGE = `
 IMPORTANT INSTRUCTIONS FOR AI:
 1. You are an Arabic AI assistant.
@@ -205,17 +206,14 @@ IMPORTANT INSTRUCTIONS FOR AI:
     }
 
     const callModel = async (modelId) => {
-        const URL = "https://openrouter.ai/api/v1/chat/completions";
+        const URL = "https://api.groq.com/openai/v1/chat/completions";
         const headers = {
             "Authorization": `Bearer ${CONFIG.API_KEY}`,
-            "Content-Type": "application/json",
-            "HTTP-Referer": CONFIG.SITE_URL,
-            "X-Title": CONFIG.SITE_TITLE
+            "Content-Type": "application/json"
         };
         const body = JSON.stringify({
             model: modelId,
             temperature: 0.6,
-            // --- 2. إرسال السجل كاملاً للموديل ---
             messages: chatHistory 
         });
 
@@ -227,15 +225,14 @@ IMPORTANT INSTRUCTIONS FOR AI:
     };
 
     const getAIResponse = async (userMessage) => {
-        // --- 3. إضافة رسالة المستخدم للذاكرة ---
+        // --- إضافة رسالة المستخدم للذاكرة ---
         chatHistory.push({ role: "user", content: userMessage });
 
-        // إدارة حجم الذاكرة (للحفاظ على التوكنز)
-        // نحتفظ بـ System Prompt (أول عنصر) + آخر 15 رسالة
+        // [تم الإصلاح] إدارة حجم الذاكرة بشكل صحيح لتجنب حدوث خطأ
         if (chatHistory.length > CONFIG.MEMORY_LIMIT) {
             chatHistory = [
                 chatHistory[0], // إبقاء System Prompt دائماً
-                ...chatHistory.slice(chatHistory.length - (CONFIG.MEMORY_LIMIT - 1))
+                ...chatHistory.slice(-(CONFIG.MEMORY_LIMIT - 1)) // جلب آخر الرسائل فقط
             ];
         }
 
@@ -243,7 +240,6 @@ IMPORTANT INSTRUCTIONS FOR AI:
         for (const key in LOCAL_FAQ) {
             if (userMessage.includes(key)) {
                 const answer = LOCAL_FAQ[key];
-                // إضافة الرد المحلي للذاكرة أيضاً ليعرف البوت أنه أجاب
                 chatHistory.push({ role: "assistant", content: answer });
                 return answer;
             }
@@ -256,9 +252,13 @@ IMPORTANT INSTRUCTIONS FOR AI:
         // المحاولة مع الموديل الأساسي
         try {
             const data = await callModel(CONFIG.MODELS[0]);
-            const botText = data.choices[0].message.content;
             
-            // --- 4. إضافة رد البوت للذاكرة ---
+            // [تم الإصلاح] حماية ضد الاستجابات الخاطئة من OpenRouter
+            if (!data || !data.choices || !data.choices[0]) {
+                throw new Error("Invalid response format from primary model");
+            }
+            
+            const botText = data.choices[0].message.content;
             chatHistory.push({ role: "assistant", content: botText });
             
             messageCount++;
@@ -271,8 +271,13 @@ IMPORTANT INSTRUCTIONS FOR AI:
             // المحاولة مع الموديل الاحتياطي
             try {
                 const data = await callModel(CONFIG.MODELS[1]);
-                const botText = data.choices[0].message.content;
                 
+                // [تم الإصلاح] حماية أيضاً للموديل الاحتياطي
+                if (!data || !data.choices || !data.choices[0]) {
+                    throw new Error("Invalid response format from backup model");
+                }
+
+                const botText = data.choices[0].message.content;
                 chatHistory.push({ role: "assistant", content: botText });
                 
                 return botText;
@@ -287,6 +292,8 @@ IMPORTANT INSTRUCTIONS FOR AI:
         TMChatUI.init();
 
         TMChatUI.onSend(async (userText) => {
+            if(!userText || userText.trim() === "") return; // حماية إضافية ضد الرسائل الفارغة
+
             TMChatUI.lockInput();
             TMChatUI.addMessage(userText.replace(/\n/g, '<br>'), "user");
             
@@ -301,7 +308,7 @@ IMPORTANT INSTRUCTIONS FOR AI:
             TMChatUI.unlockInput();
         });
 
-        console.log("🚀 Tahya Masr Bot Logic Loaded (Arabic Safe Mode)");
+        console.log("🚀 Tahya Masr Bot Logic Loaded (Arabic Safe Mode - Fixed)");
     };
 
     if (document.readyState === 'loading') {
@@ -310,10 +317,3 @@ IMPORTANT INSTRUCTIONS FOR AI:
         initBot();
     }
 })();
-
-
-
-
-
-
-
