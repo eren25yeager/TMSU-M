@@ -16,8 +16,8 @@
         API_KEY: "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", 
         // الموديلات المستخدمة
         MODELS: [
-            "google/gemma-3n-e2b-it:free", 
-            "openai/gpt-oss-20b:free"
+            "stepfun/step-3.5-flash:free", 
+            "upstage/solar-pro-3:free"
         ],
         MAX_MESSAGES_PER_SESSION: 100000,
         SITE_URL: window.location.origin,
@@ -310,6 +310,7 @@ IMPORTANT INSTRUCTIONS FOR AI:
         initBot();
     }
 })();
+
 
 
 
