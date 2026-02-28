@@ -13,11 +13,11 @@
     }
 
     const CONFIG = {
-        API_KEY: "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", 
+        API_KEY: "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", 
         // الموديلات المستخدمة
         MODELS: [
-            "stepfun/step-3.5-flash:free", 
-            "upstage/solar-pro-3:free"
+            "liquid/lfm-2.5-1.2b-thinking:free", 
+            "nvidia/nemotron-3-nano-30b-a3b:free"
         ],
         MAX_MESSAGES_PER_SESSION: 100000,
         SITE_URL: window.location.origin,
@@ -310,6 +310,7 @@ IMPORTANT INSTRUCTIONS FOR AI:
         initBot();
     }
 })();
+
 
 
 
